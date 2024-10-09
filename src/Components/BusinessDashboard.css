@@ -1,0 +1,15 @@
+/* BusinessDashboard.css */
+.dashboard-container {
+    padding: 20px;
+    background-color: #1c1c1c;
+    color: white;
+  }
+  
+  .post-card {
+    margin: 15px 0;
+  }
+  
+  .posts-section {
+    margin-top: 30px;
+  }
+  

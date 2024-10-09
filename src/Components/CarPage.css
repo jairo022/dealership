@@ -1,0 +1,53 @@
+body {
+    background-color: #1c1c1c; /* Dark background */
+    color: white; /* Text color */
+    margin: 0;
+  }
+  
+  .car-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .car-card {
+    background-color: #2c2c2c; /* Card background */
+    border: 1px solid #444;
+    border-radius: 8px;
+    margin: 15px;
+    padding: 20px;
+    width: 300px; /* Increased width */
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition */
+  }
+  
+  .car-card:hover {
+    transform: scale(1.05); /* Scale on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .car-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  .contact-button {
+    background-color: white; 
+    color: #b11010; 
+    border: none;
+    padding: 12px 20px; 
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s; 
+  }
+  
+  .contact-button:hover {
+    background-color: #b11010; 
+    color: white; 
+    transform: scale(1.05); 
+  }
+  

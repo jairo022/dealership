@@ -1,0 +1,32 @@
+/* Signup.css */
+.signup-container {
+  max-width: 500px; /* Set a maximum width */
+  margin: 60px auto; /* Center the container */
+  padding: 40px; /* Add padding */
+  background: #ffffff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.signup-container h2 {
+  color: #333333; /* Dark text color */
+  font-size: 32px; /* Large font size */
+  font-weight: 600; /* Bold text */
+}
+
+.signup-container .form-control {
+  border-radius: 8px; /* Rounded input fields */
+  height: 50px; /* Increased input height */
+  font-size: 16px; /* Adjusted font size */
+}
+
+.signup-container .btn {
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+  height: 50px; /* Increased button height */
+  font-size: 18px; /* Larger button text */
+}
+
+.signup-container .btn:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: translateY(-2px); /* Lift effect */
+}

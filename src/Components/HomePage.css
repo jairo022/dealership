@@ -1,0 +1,16 @@
+/* HomePage.css */
+.home-container {
+  position: relative;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Hide overflow */
+}
+
+.background-video {
+  position: absolute;
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  object-fit: cover; /* Cover the area while maintaining aspect ratio */
+  z-index: -1; /* Behind other elements */
+}

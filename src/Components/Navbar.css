@@ -1,0 +1,70 @@
+.navbar {
+  background-color: none; /* Maroon color */
+  padding: 10px 20px; /* Padding for navbar */
+  
+}
+
+/* Logo style */
+.navbar-logo {
+  font-size: 24px; /* Logo font size */
+  color: red; /* Logo color */
+  font-weight: bold; /* Bold logo */
+  transition: transform 0.2s; /* Smooth transition for growth */
+}
+
+.navbar-logo:hover {
+  transform: scale(1.1); /* Grow slightly on hover */
+}
+
+/* Dropdown styles */
+.dropdown-item {
+  color: white; /* Text color for dropdown items */
+  transition: color 0.2s, transform 0.2s; /* Smooth transition for color and growth */
+}
+
+.dropdown-item:hover {
+  color: red; /* Change to red on hover */
+  transform: scale(1.05); /* Grow slightly on hover */
+}
+
+/* Navbar link styles */
+.nav-link {
+  color: white; /* Link color */
+  margin-left: 20px; /* Space between links */
+  font-size: 18px; /* Font size for links */
+  transition: color 0.2s, transform 0.2s; /* Smooth transition for color and growth */
+}
+
+.nav-link:hover {
+  color: red; /* Change to red on hover */
+  transform: scale(1.05); /* Grow slightly on hover */
+}
+
+/* User icon styles */
+.user-icon {
+  color: white; /* Color for the user icon */
+  margin-right: 5px; /* Space between icon and name */
+}
+
+/* Adjustments for user name */
+.text-light {
+  color: white; /* Color for user name */
+  margin-left: 5px; /* Space between icon and name */
+  font-size: 1rem; /* Adjust font size */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px; /* Adjust padding for mobile */
+  }
+
+  .nav-link {
+    margin-left: 10px; /* Less margin on mobile */
+  }
+
+  .navbar .d-flex {
+    display: flex;
+    align-items: center; /* Align icon and text vertically */
+  }
+}

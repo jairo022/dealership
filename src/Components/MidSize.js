@@ -1,39 +1,101 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppNavbar from './Navbar';
-import './TruckPage.css'; // Import your CSS file
+import { database } from '../fireBaseConfig';
+import { get, ref, remove } from 'firebase/database';
+import { Button, Card } from 'react-bootstrap';
+import './CarPage.css';
+import { useUser } from './UserContext';
+import { useNavigate } from 'react-router-dom';
 
-const MidSize = () => {
-  const trucks = [
-    {
-      id: 1,
-      name: 'MidSize Truck Model 1',
-      description: 'Perfect balance between size and power.',
-      image: 'path/to/midsize1.jpg', // Replace with actual image path
-    },
-    {
-      id: 2,
-      name: 'MidSize Truck Model 2',
-      description: 'Great for hauling and towing needs.',
-      image: 'path/to/midsize2.jpg',
-    },
-    // Add more truck objects as needed
-  ];
+const Midsize = () => {
+  const [trucks, setTrucks] = useState([]);
+  const { userRole, loading } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTrucks = async () => {
+      try {
+        const trucksRef = ref(database, 'trucks');
+        const snapshot = await get(trucksRef);
+
+        if (snapshot.exists()) {
+          const trucksData = [];
+          const data = snapshot.val();
+
+          for (const [key, truck] of Object.entries(data)) {
+            if (truck.vehicleType === 'midsize') {
+              trucksData.push({ ...truck, id: key });
+            }
+          }
+
+          setTrucks(trucksData);
+        } else {
+          console.log("No midsize trucks available");
+        }
+      } catch (error) {
+        console.error("Error fetching midsize trucks:", error);
+      }
+    };
+
+    fetchTrucks();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const truckRef = ref(database, `trucks/${id}`);
+      await remove(truckRef);
+      setTrucks(prevTrucks => prevTrucks.filter(truck => truck.id !== id));
+      console.log(`Truck with ID: ${id} deleted successfully.`);
+    } catch (error) {
+      console.error('Error deleting truck:', error);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <AppNavbar />
-      <div className="truck-container">
-        {trucks.map(truck => (
-          <div key={truck.id} className="truck-card">
-            <img src={truck.image} alt={truck.name} className="truck-image" />
-            <h3>{truck.name}</h3>
-            <p>{truck.description}</p>
-            <button className="contact-button">Contact Dealership</button>
-          </div>
-        ))}
+      <div className="car-container">
+        {trucks.length > 0 ? (
+          trucks.map(truck => (
+            <Card key={truck.id} className="car-card mb-4">
+              <Card.Img variant="top" src={truck.imageUrl} alt={truck.model} className="car-image" />
+              <Card.Body>
+                <Card.Title>{truck.model}</Card.Title>
+                <Card.Text>
+                  <strong>Description:</strong> {truck.description}<br />
+                  <strong>Transmission:</strong> {truck.transmission || "N/A"}<br />
+                  <strong>Year:</strong> {truck.year}<br />
+                  <strong>Vehicle Type:</strong> {truck.vehicleType}
+                </Card.Text>
+                <div className="button-container">
+                  <Button
+                    variant="success"
+                    className="w-100 contact-button"
+                    onClick={() => navigate('/ContactDealership')}
+                  >
+                    Contact Dealership
+                  </Button>
+                  {userRole === 'business' && (
+                    <Button
+                      variant="danger"
+                      className="w-100 delete-button"
+                      onClick={() => handleDelete(truck.id)}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          ))
+        ) : (
+          <div>No data available for midsize trucks.</div>
+        )}
       </div>
     </div>
   );
 };
 
-export default MidSize;
+export default Midsize;

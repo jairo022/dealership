@@ -18,7 +18,7 @@
 
 /* Dropdown styles */
 .dropdown-item {
-  color: white; /* Text color for dropdown items */
+  color:red; /* Text color for dropdown items */
   transition: color 0.2s, transform 0.2s; /* Smooth transition for color and growth */
 }
 

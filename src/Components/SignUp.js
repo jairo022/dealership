@@ -1,15 +1,14 @@
-// SignUp.js
 import React, { useState } from 'react';
 import { Button, Form, Card } from 'react-bootstrap';
-import { auth, db } from '../fireBaseConfig'; // Import Firestore
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
+import { auth, database } from '../fireBaseConfig'; // Ensure correct imports
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { ref, set } from 'firebase/database'; // Import Realtime Database methods
 import { useNavigate } from 'react-router-dom';
-import './SignUp.css'; // Import the CSS file
+import './SignUp.css';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    userType: 'normal', // Default to normal user
+    userType: '', 
     fullName: '',
     phoneNumber: '',
     email: '',
@@ -40,27 +39,34 @@ const SignUp = () => {
     }
 
     try {
-      // Create user
+      // Create the user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Save user data to Firestore
-      const userDocRef = doc(db, 'users', user.uid);
-      await setDoc(userDocRef, {
+      // Prepare user data to store in Realtime Database
+      const userData = {
         userType,
         email,
         fullName: userType === 'normal' ? fullName : businessName,
         phoneNumber: userType === 'normal' ? phoneNumber : businessPhone,
-      });
+        createdAt: new Date().toISOString(), // Optional timestamp
+      };
 
-      // Automatically sign in the user
-      await signInWithEmailAndPassword(auth, email, password);
+      // Save user data to Realtime Database under the 'users' collection
+      await set(ref(database, `users/${user.uid}`), userData);
 
-      // Redirect to home page
+      // Redirect to the home page after successful signup
       navigate('/home');
     } catch (error) {
       console.error('Error signing up:', error.message);
-    }
+      if (error.code === 'auth/weak-password') {
+        alert('The password is too weak.');
+      } else if (error.code === 'auth/email-already-in-use') {
+        alert('The email is already in use.');
+      } else {
+        alert('Error signing up. Please try again.');
+      }
+    }    
   };
 
   return (

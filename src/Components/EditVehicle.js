@@ -1,47 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db } from '../fireBaseConfig';
+import { database } from '../fireBaseConfig'; // Ensure this points to your Firestore instance
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { Button, Form, Card } from 'react-bootstrap';
+import { Button, Form, Card, Alert } from 'react-bootstrap';
 
 const EditVehicle = () => {
-  const { id } = useParams();
+  const { id, vehicleType } = useParams(); // Get vehicle type from URL
   const navigate = useNavigate();
-  const [carData, setCarData] = useState({
+  const [vehicleData, setVehicleData] = useState({
     model: '',
     description: '',
     transmission: '',
     year: '',
-    vehicleType: '',
     imageUrl: ''
   });
+  const [error, setError] = useState(null); // For error handling
+  const [loading, setLoading] = useState(true); // For loading state
 
   useEffect(() => {
-    const fetchCarData = async () => {
-      const carDocRef = doc(db, 'cars', id);
-      const carDoc = await getDoc(carDocRef);
-      if (carDoc.exists()) {
-        setCarData(carDoc.data());
+    const fetchVehicleData = async () => {
+      try {
+        // Dynamically get the correct collection based on vehicleType
+        const vehicleDocRef = doc(database, vehicleType, id); // vehicleType could be 'cars', 'motorcycles', 'trucks'
+        const vehicleDoc = await getDoc(vehicleDocRef);
+        if (vehicleDoc.exists()) {
+          setVehicleData(vehicleDoc.data());
+        } else {
+          setError('Vehicle not found.');
+        }
+      } catch (err) {
+        setError('Error fetching vehicle data.');
+      } finally {
+        setLoading(false);
       }
     };
-    fetchCarData();
-  }, [id]);
+    fetchVehicleData();
+  }, [id, vehicleType]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCarData({ ...carData, [name]: value });
+    setVehicleData({ ...vehicleData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const carDocRef = doc(db, 'cars', id);
-    await updateDoc(carDocRef, carData);
-    navigate('/cars/sedan'); // Redirect back to the Sedan page
+    try {
+      // Dynamically get the correct collection based on vehicleType
+      const vehicleDocRef = doc(database, vehicleType, id); // vehicleType could be 'cars', 'motorcycles', 'trucks'
+      await updateDoc(vehicleDocRef, vehicleData);
+      // Redirect back to the appropriate vehicle type page
+      navigate(`/${vehicleType}/${vehicleData.model.toLowerCase()}`); // Update redirect URL dynamically
+    } catch (err) {
+      setError('Failed to update the vehicle.');
+    }
   };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <h2>Edit Vehicle</h2>
+      {error && <Alert variant="danger">{error}</Alert>} {/* Show error messages */}
       <Card>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
@@ -50,7 +69,7 @@ const EditVehicle = () => {
               <Form.Control
                 type="text"
                 name="model"
-                value={carData.model}
+                value={vehicleData.model}
                 onChange={handleChange}
                 required
               />
@@ -60,7 +79,7 @@ const EditVehicle = () => {
               <Form.Control
                 type="text"
                 name="description"
-                value={carData.description}
+                value={vehicleData.description}
                 onChange={handleChange}
                 required
               />
@@ -70,7 +89,7 @@ const EditVehicle = () => {
               <Form.Control
                 type="text"
                 name="transmission"
-                value={carData.transmission}
+                value={vehicleData.transmission}
                 onChange={handleChange}
                 required
               />
@@ -80,17 +99,7 @@ const EditVehicle = () => {
               <Form.Control
                 type="number"
                 name="year"
-                value={carData.year}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group controlId="formVehicleType">
-              <Form.Label>Vehicle Type</Form.Label>
-              <Form.Control
-                type="text"
-                name="vehicleType"
-                value={carData.vehicleType}
+                value={vehicleData.year}
                 onChange={handleChange}
                 required
               />
@@ -100,7 +109,7 @@ const EditVehicle = () => {
               <Form.Control
                 type="text"
                 name="imageUrl"
-                value={carData.imageUrl}
+                value={vehicleData.imageUrl}
                 onChange={handleChange}
                 required
               />

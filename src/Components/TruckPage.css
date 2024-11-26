@@ -1,53 +1,101 @@
+/* Reset default margins and paddings for the body */
 body {
-    background-color: #1c1c1c; /* Dark background */
-    color: white; /* Text color */
-    margin: 0;
-  }
-  
-  .truck-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  .truck-card {
-    background-color: #2c2c2c; /* Card background */
-    border: 1px solid #444;
-    border-radius: 8px;
-    margin: 15px;
-    padding: 20px;
-    width: 300px; /* Increased width */
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition */
-  }
-  
-  .truck-card:hover {
-    transform: scale(1.05); /* Scale on hover */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  }
-  
-  .truck-image {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-  }
-  
-  .contact-button {
-    background-color: white; /* Button color */
-    color: #b11010; /* Red color */
-    border: none;
-    padding: 12px 20px; /* More padding */
-    cursor: pointer;
-    border-radius: 4px;
-    margin-top: 10px;
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
-  }
-  
-  .contact-button:hover {
-    background-color: #b11010; /* Red background on hover */
-    color: white; /* White text on hover */
-    transform: scale(1.05); /* Scale on hover */
-  }
-  
+  background-color: #1c1c1c;
+  color: white;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Main container for the truck cards */
+.truck-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the cards */
+  gap: 20px; /* Add spacing between cards */
+  padding: 20px;
+}
+
+/* Individual truck card styling */
+.truck-card {
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  border-radius: 8px;
+  width: 300px; /* Limit the width of each card */
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+/* Hover effect for the truck cards */
+.truck-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background-color: #3c3c3c;
+}
+
+/* Image styling inside the card */
+.truck-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Title styling inside the card */
+.truck-card .card-title {
+  font-size: 1.5em;
+  margin: 10px 0;
+  color: #f0ad4e; /* Gold color */
+}
+
+/* Description inside the card */
+.truck-card .card-text {
+  font-size: 0.9em;
+  color: #ddd;
+}
+
+/* Styling for buttons */
+.contact-button {
+  background-color: #f0ad4e;
+  color: #2c2c2c;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.contact-button:hover {
+  background-color: #b11010;
+  color: white;
+  transform: scale(1.05);
+}
+
+.delete-button {
+  background-color: #d9534f;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Button container to stack buttons */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* No vehicles message styling */
+.no-vehicles-message {
+  font-size: 1.2em;
+  color: #ccc;
+  margin-top: 20px;
+  text-align: center;
+}

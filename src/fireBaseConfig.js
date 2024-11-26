@@ -1,17 +1,21 @@
-// Import the functions you need from the SDKs you need
+// Import the functions you need from the Firebase SDKs
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"; // Import Firestore
-import { getStorage } from "firebase/storage"; // Import Storage
+import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
+import { getAnalytics } from "firebase/analytics";
+import { getFunctions } from "firebase/functions"; // Import Firebase Functions
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCoFSPWaPiCg7bUuG1sqZ7Ck2VU0NEM_BU",
-  authDomain: "pargolproject.firebaseapp.com",
-  projectId: "pargolproject",
-  storageBucket: "pargolproject.appspot.com",
-  messagingSenderId: "62132971995",
-  appId: "1:62132971995:web:f7db6701bf05008910dffe"
+  apiKey: "AIzaSyDr0e9_H7P-sooH8HmuA-sebVBdN9jgaWk",
+  authDomain: "dealershipcmt.firebaseapp.com",
+  databaseURL: "https://dealershipcmt-default-rtdb.firebaseio.com",
+  projectId: "dealershipcmt",
+  storageBucket: "dealershipcmt.appspot.com",
+  messagingSenderId: "672877366418",
+  appId: "1:672877366418:web:9c98f07a13509b16b32a4b",
+  measurementId: "G-BPGS2PJW7B",
 };
 
 // Initialize Firebase
@@ -19,5 +23,9 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase services
 export const auth = getAuth(app);
-export const db = getFirestore(app); // Firestore
-export const storage = getStorage(app); // Storage
+export const storage = getStorage(app);
+export const analytics = typeof window !== 'undefined' && getAnalytics(app);
+export const database = getDatabase(app);
+
+// Initialize Firebase Functions (for Stripe)
+export const functions = getFunctions(app);

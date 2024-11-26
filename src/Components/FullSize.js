@@ -1,36 +1,108 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppNavbar from './Navbar';
-import './TruckPage.css'; // Import your CSS file
+import { database } from '../fireBaseConfig';
+import { get, ref, remove } from 'firebase/database';
+import { Button, Card } from 'react-bootstrap';
+import './CarPage.css';
+import { useUser } from './UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const FullSize = () => {
-  const trucks = [
-    {
-      id: 1,
-      name: 'FullSize Truck Model 1',
-      description: 'The ultimate truck for heavy-duty tasks.',
-      image: 'path/to/fullsize1.jpg', // Replace with actual image path
-    },
-    {
-      id: 2,
-      name: 'FullSize Truck Model 2',
-      description: 'Maximum towing capacity and spacious.',
-      image: 'path/to/fullsize2.jpg',
-    },
-    // Add more truck objects as needed
-  ];
+  const [trucks, setTrucks] = useState([]);
+  const { userRole, loading } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTrucks = async () => {
+      try {
+        const trucksRef = ref(database, 'trucks');
+        const snapshot = await get(trucksRef);
+
+        if (snapshot.exists()) {
+          const trucksData = [];
+          const data = snapshot.val();
+          console.log("Fetched data from Firebase:", data); // Log the raw data
+
+          // Explicitly log each truck and its key
+          for (const [key, truck] of Object.entries(data)) {
+            console.log(`Truck Key: ${key}, Truck Data:`, truck); // Log the truck's key and data
+
+            // Check for the correct vehicleType (adjusted to 'fullsize' without a hyphen)
+            if (truck.vehicleType && truck.vehicleType.toLowerCase() === 'fullsize') {
+              trucksData.push({ ...truck, id: key });
+            }
+          }
+
+          if (trucksData.length > 0) {
+            console.log("Filtered full-size trucks:", trucksData); // Log filtered trucks
+            setTrucks(trucksData);
+          } else {
+            console.log("No full-size trucks found with vehicleType 'fullsize'");
+          }
+        } else {
+          console.log("No data found in the trucks collection");
+        }
+      } catch (error) {
+        console.error("Error fetching full-size trucks:", error);
+      }
+    };
+
+    fetchTrucks();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const truckRef = ref(database, `trucks/${id}`);
+      await remove(truckRef);
+      setTrucks(prevTrucks => prevTrucks.filter(truck => truck.id !== id));
+      console.log(`Truck with ID: ${id} deleted successfully.`);
+    } catch (error) {
+      console.error('Error deleting truck:', error);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <AppNavbar />
-      <div className="truck-container">
-        {trucks.map(truck => (
-          <div key={truck.id} className="truck-card">
-            <img src={truck.image} alt={truck.name} className="truck-image" />
-            <h3>{truck.name}</h3>
-            <p>{truck.description}</p>
-            <button className="contact-button">Contact Dealership</button>
-          </div>
-        ))}
+      <div className="car-container">
+        {trucks.length > 0 ? (
+          trucks.map(truck => (
+            <Card key={truck.id} className="car-card mb-4">
+              <Card.Img variant="top" src={truck.imageUrl} alt={truck.model} className="car-image" />
+              <Card.Body>
+                <Card.Title>{truck.model}</Card.Title>
+                <Card.Text>
+                  <strong>Description:</strong> {truck.description}<br />
+                  <strong>Transmission:</strong> {truck.transmission || "N/A"}<br />
+                  <strong>Year:</strong> {truck.year}<br />
+                  <strong>Vehicle Type:</strong> {truck.vehicleType}
+                </Card.Text>
+                <div className="button-container">
+                  <Button
+                    variant="success"
+                    className="w-100 contact-button"
+                    onClick={() => navigate('/ContactDealership')}
+                  >
+                    Contact Dealership
+                  </Button>
+                  {userRole === 'business' && (
+                    <Button
+                      variant="danger"
+                      className="w-100 delete-button"
+                      onClick={() => handleDelete(truck.id)}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          ))
+        ) : (
+          <div>No data available for full-size trucks.</div>
+        )}
       </div>
     </div>
   );

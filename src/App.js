@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  // Updated import for React Router v6
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Components/Login';
 import SignUp from './Components/SignUp';
@@ -16,36 +16,38 @@ import FullSize from './Components/FullSize';
 import BusinessDashboard from './Components/BusinessDashboard';
 import About from './Components/About';
 import AddVehicle from './Components/AddVehicule';
-import EditVehicle from './Components/EditVehicle'; // Import the new component
-
-
+import EditVehicle from './Components/EditVehicle';
+import { UserProvider } from './Components/UserContext';
+import ContactDealership from './Components/ContactDealership';
 
 const App = () => (
-  <Router>
-    <div>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/cars/sedan" element={<Sedan />} />
-        <Route path="/cars/coupe" element={<Coupe />} />
-        <Route path="/cars/suv" element={<Suvs />} />
-        <Route path="/motorcycles/sport" element={<Sports />} />
-        <Route path="/motorcycles/cruiser" element={<Cruisers />} />
-        <Route path="/motorcycles/touring" element={<Touring />} />
-        <Route path="/trucks/compact" element={<Compact />} />
-        <Route path="/trucks/midsize" element={<MidSize />} />
-        <Route path="/trucks/fullsize" element={<FullSize />} />
-        <Route path="/business-dashboard" element={<BusinessDashboard />} />
-        <Route path="/add-vehicle" element={<AddVehicle />} />
-        <Route path="/edit-vehicle/:id" element={<EditVehicle />} />
-
-        <Route path="/" element={<HomePage />} />
-        
-      </Routes>
-    </div>
-  </Router>
+  <UserProvider>
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/cars/sedan" element={<Sedan />} />
+          <Route path="/cars/coupe" element={<Coupe />} />
+          <Route path="/cars/suv" element={<Suvs />} />
+          <Route path="/motorcycles/sport" element={<Sports />} />
+          <Route path="/motorcycles/cruiser" element={<Cruisers />} />
+          <Route path="/motorcycles/touring" element={<Touring />} />
+          <Route path="/trucks/compact" element={<Compact />} />
+          <Route path="/trucks/midsize" element={<MidSize />} />
+          <Route path="/trucks/fullsize" element={<FullSize />} />
+          <Route path="/business-dashboard" element={<BusinessDashboard />} />
+          <Route path="/add-vehicle" element={<AddVehicle />} />
+          {/* Updated edit vehicle route with vehicleType */}
+          <Route path="/edit-vehicle/:vehicleType/:id" element={<EditVehicle />} />
+          <Route path="/ContactDealership" element={<ContactDealership />} />
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </div>
+    </Router>
+  </UserProvider>
 );
 
 export default App;

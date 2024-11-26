@@ -1,84 +1,61 @@
-// Login.js
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Card } from 'react-bootstrap';
-import { auth } from '../fireBaseConfig';
-import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
+import { auth } from '../fireBaseConfig'; // Adjust the import path as needed
+import { signInWithEmailAndPassword, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth'; // Import both persistence methods
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc, setDoc, getFirestore } from 'firebase/firestore'; // Firestore imports
-import './Login.css';
+import './Login.css'; // Import your CSS file
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false); // State for remember me checkbox
+  const [rememberMe, setRememberMe] = useState(false); // State for "Remember Me"
+  const [errorMessage, setErrorMessage] = useState(''); // State for error message
   const navigate = useNavigate();
-
-  // Firestore database instance
-  const db = getFirestore();
-
-  // Check Firestore for "Remember Me" preference on component mount
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (email) {
-        try {
-          const userDocRef = doc(db, 'users', email);
-          const userDoc = await getDoc(userDocRef);
-
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            if (userData.rememberMe !== undefined) {
-              setRememberMe(userData.rememberMe);
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [email, db]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear any previous error message
 
     try {
-      // Set persistence based on the "Remember Me" value from Firestore or checkbox
-      const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
-
-      await setPersistence(auth, persistenceType);
+      // Set Firebase Auth persistence based on "Remember Me" checkbox
+      if (rememberMe) {
+        await auth.setPersistence(browserLocalPersistence); // Persist session in localStorage for "Remember Me"
+      } else {
+        await auth.setPersistence(browserSessionPersistence); // Use session storage for "Don't Remember Me"
+      }
 
       // Sign in with email and password
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Store or update the user's "Remember Me" preference in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        email: user.email,
-        lastLogin: new Date(),
-        rememberMe: rememberMe, // Save the current state of "Remember Me"
-      }, { merge: true });
-
-      // Redirect to home page
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/home');
     } catch (error) {
-      console.error('Error logging in:', error.message);
+      console.error('Error logging in:', error);
+      setErrorMessage(error.message); // Set error message to display to user
     }
   };
+
+  // Check if email is saved in local storage on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true); // Set "Remember Me" to true if an email is found
+    }
+  }, []);
 
   return (
     <div className="login-container">
       <Card className="login-card">
         <Card.Body>
-          <h2 className="text-center mb-4">Login</h2>
+          <h2 className="text-center mb-4">Log In</h2>
           <Form onSubmit={handleSubmit}>
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} {/* Display error message */}
             <Form.Group className="mb-3">
               <Form.Label>Email:</Form.Label>
               <Form.Control
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
+                placeholder="Enter your email"
                 required
               />
             </Form.Group>
@@ -92,15 +69,15 @@ const Login = () => {
                 required
               />
             </Form.Group>
-            <Form.Group className="mb-3 d-flex align-items-center">
+            <Form.Group className="mb-3">
               <Form.Check
                 type="checkbox"
-                label="Remember me"
+                label="Remember Me"
                 checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
+                onChange={(e) => setRememberMe(e.target.checked)}
               />
             </Form.Group>
-            <Button type="submit" className="w-100" variant="primary">Login</Button>
+            <Button type="submit" className="w-100" variant="primary">Log In</Button>
           </Form>
         </Card.Body>
       </Card>

@@ -1,53 +1,91 @@
+/* Reset default margins and paddings for the body */
 body {
-    background-color: #1c1c1c; /* Dark background */
-    color: white; /* Text color */
-    margin: 0;
-  }
-  
-  .motorcycle-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  .motorcycle-card {
-    background-color: #2c2c2c; /* Card background */
-    border: 1px solid #444;
-    border-radius: 8px;
-    margin: 15px;
-    padding: 20px;
-    width: 300px; /* Increased width */
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition */
-  }
-  
-  .motorcycle-card:hover {
-    transform: scale(1.05); /* Scale on hover */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  }
-  
-  .motorcycle-image {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-  }
-  
-  .contact-button {
-    background-color: white; /* Button color */
-    color: #b11010; /* Red color */
-    border: none;
-    padding: 12px 20px; /* More padding */
-    cursor: pointer;
-    border-radius: 4px;
-    margin-top: 10px;
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
-  }
-  
-  .contact-button:hover {
-    background-color: #b11010; /* Red background on hover */
-    color: white; /* White text on hover */
-    transform: scale(1.05); /* Scale on hover */
-  }
-  
+  background-color: #1c1c1c;
+  color: white;
+  margin: 0;
+}
+
+/* Container for the vehicle cards */
+.motorcycle-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Individual vehicle card styling */
+.motorcycle-card {
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  border-radius: 8px;
+  margin: 15px;
+  padding: 20px;
+  width: 300px; /* Fixed width */
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+/* Hover effect for the vehicle cards */
+.motorcycle-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background-color: #3c3c3c;
+}
+
+/* Image styling inside the card */
+.motorcycle-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Title inside the card */
+.motorcycle-card .card-title {
+  font-size: 1.5em;
+  margin: 10px 0;
+  color: #f0ad4e; /* Gold color */
+}
+
+/* Description inside the card */
+.motorcycle-card .card-text {
+  font-size: 0.9em;
+  color: #ddd;
+}
+
+/* Button styling */
+.contact-button {
+  background-color: #f0ad4e;
+  color: #2c2c2c;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Hover effect for the contact button */
+.contact-button:hover {
+  background-color: #b11010;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Button container to hold both buttons */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.delete-button {
+  background-color: #d9534f;
+  border-radius: 4px;
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
+  color: white;
+  transform: scale(1.05);
+}
